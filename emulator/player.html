@@ -27,8 +27,10 @@
                 gameUrl: gameUrl, 
                 core: core,
                 parent: document.getElementById('game'),
-                // Aqui tentamos apontar para a pasta cores que você possui
-                path: 'emulator/' 
+                // ESTA LINHA RESOLVE O SEU PROBLEMA:
+                // Ela diz para o emulador: "Não procure a pasta wasm no meu GitHub, 
+                // busque direto no servidor oficial do EmulatorJS"
+                path: 'https://cdn.emulatorjs.org/stable/' 
             };
         }
 
