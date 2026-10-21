@@ -1,111 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="utf-8">
-    <!-- No celular: ocupa a tela inteira e não deixa o toque nos botões dar zoom -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando Jogo...</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; touch-action: none; }
-        #game { width: 100%; height: 100%; }
-        [hidden] { display: none !important; }
-        #escolha { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-            padding: 24px; color: white; font-family: sans-serif; text-align: center; z-index: 10; }
-        #escolha h1 { margin: 0; font-size: 22px; }
-        #escolha p { margin: 0; color: #bbb; max-width: 320px; line-height: 1.4; }
-        #escolha label { background: #ff0000; color: white; padding: 14px 24px; border-radius: 8px; font-size: 18px; cursor: pointer; }
-        #escolha input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-        #escolha a { color: #bbb; text-decoration: none; margin-top: 10px; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
+        #game { width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
     <div id="game"></div>
     
-    <div id="escolha" hidden>
-        <h1 id="escolha-nome">Escolha o jogo</h1>
-        <p>Toque no botão e escolha o arquivo do jogo salvo no seu aparelho. O jogo fica só no seu aparelho.</p>
-        <label for="arquivo">Escolher jogo</label>
-        <input type="file" id="arquivo">
-        <a href="../index.html">← Voltar</a>
-    </div>
-
     <script>
-        // 1. Configurações Básicas do EmulatorJS
-        window.EJS_player = '#game';
-        window.EJS_pathtodata = './'; // Pasta onde estão o emulator.min.js e a pasta cores/
-        window.EJS_language = 'pt-BR';
-        
-        window.EJS_defaultOptions = {
-            'virtual-gamepad': 'enabled',
-            'snes9x_audio_interpolation': 'none'
+        window.EJS_player = {
+            gameUrl: new URLSearchParams(window.location.search).get('game'),
+            core: new URLSearchParams(window.location.search).get('core') || 'nes',
+            parent: document
         };
-
-        // 2. Lógica de Detecção de ROM via URL
-        const urlParams = new URLSearchParams(window.location.search);
-        let gameUrl = urlParams.get('game') || '';
-
-        // Se o link não for externo (http), tenta ajustar o caminho
-        if (gameUrl && !/^(https?:|\/|\.\.\/)/.test(gameUrl)) {
-            gameUrl = '../' + gameUrl;
-        }
-        window.EJS_gameUrl = gameUrl;
-
-        // 3. Detecção Automática do Core (Console)
-        const porExtensao = {
-            nes: 'nes', sfc: 'snes', smc: 'snes', gba: 'gba', gb: 'gb', gbc: 'gb',
-            n64: 'n64', z64: 'n64', md: 'segaMD', gen: 'segaMD', sms: 'segaMS', gg: 'segaGG'
-        };
-        
-        // Pega a extensão do arquivo para definir o core automaticamente
-        const ext = gameUrl.split('?')[0].split('.').pop().toLowerCase();
-        window.EJS_core = urlParams.get('core') || porExtensao[ext] || 'snes';
-
-        // 4. Função para Ligar o Motor do Emulador
-        const carregarMotor = () => {
-            let script = document.createElement('script');
-            script.src = 'emulator.min.js'; // USANDO O ARQUIVO CORRETO DA SUA PASTA
-            document.head.appendChild(script);
-        };
-
-        // 5. Decisão: Carregar do Supabase ou Pedir Arquivo Local
-        if (gameUrl && gameUrl !== '') {
-            // Se tem link na URL, liga o motor direto
-            carregarMotor();
-        } else {
-            // Se não tem link, mostra a tela de "Escolher Jogo"
-            const escolha = document.getElementById('escolha');
-            escolha.hidden = false;
-            
-            if (urlParams.get('nome')) {
-                document.getElementById('escolha-nome').textContent = urlParams.get('nome');
-            }
-
-            document.getElementById('arquivo').addEventListener('change', e => {
-                const arquivo = e.target.files[0];
-                if (!arquivo) return;
-                
-                const extArq = arquivo.name.split('.').pop().toLowerCase();
-                window.EJS_gameUrl = arquivo;
-                window.EJS_gameName = arquivo.name.replace(/\.[^.]+$/, '');
-                window.EJS_core = urlParams.get('core') || porExtensao[extArq] || 'snes';
-                
-                escolha.remove();
-                carregarMotor();
-            });
-        }
-
-        // 6. Correção de Áudio para iPhone/iPad (Safari)
-        const audios = [];
-        const AudioOriginal = window.AudioContext || window.webkitAudioContext;
-        if (AudioOriginal) {
-            const AudioRastreado = class extends AudioOriginal {
-                constructor(...args) { super(...args); audios.push(this); }
-            };
-            window.AudioContext = AudioRastreado;
-            window.webkitAudioContext = AudioRastreado;
-        }
-        const liberarSom = () => audios.forEach(a => { if (a.state !== 'running') a.resume(); });
-        ['touchstart', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, liberarSom, true));
-
     </script>
+    <script src="emulator.min.js"></script>
 </body>
 </html>
