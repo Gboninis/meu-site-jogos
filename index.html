@@ -2,32 +2,87 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meus Jogos Retro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Games - Meus Jogos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #222; color: white; text-align: center; }
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
-        .card { background: #333; padding: 10px; border-radius: 10px; width: 150px; }
-        .card img { width: 100%; border-radius: 5px; }
-        .btn { background: #ff0000; color: white; padding: 10px; text-decoration: none; display: block; margin-top: 10px; border-radius: 5px; }
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .retro-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #1e293b;
+            border: 2px solid #334155;
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-color: #3b82f6;
+        }
+        .btn-play {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transition: filter 0.2s;
+        }
+        .btn-play:hover {
+            filter: brightness(1.2);
+        }
     </style>
 </head>
-<body>
-    <h1>Biblioteca de Jogos</h1>
-    <div class="grid">
-        <!-- JOGO 1: SUPER MARIO (NES) -->
-        <div class="card">
-            <img src="capas/super-mario-world.png" alt="Capa de Super Mario">
-            <p>Super Mario</p>
-            <!-- Proxy CORS + Core correto: nes -->
-          <a class="btn" href="emulator/player.html?game=https://api.allorigins.win/raw?url=https://svxmnsmuybudhneprgnf.supabase.co/storage/v1/object/public/roms/super-mario.nes&core=nes">Jogar Super Mario</a>
+<body class="min-h-screen p-8">
+
+    <header class="text-center mb-12">
+        <h1 class="retro-font text-3xl md:text-5xl text-blue-500 mb-4">RETRO GAMES</h1>
+        <p class="text-slate-400">Escolha seu jogo e divirta-se!</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- JOGO 1: SUPER MARIO -->
+        <div class="game-card p-6 rounded-2xl text-center">
+            <div class="w-full h-40 bg-slate-700 rounded-lg mb-4 flex items-center justify-center">
+                <span class="text-5xl">🍄</span>
+            </div>
+            <h2 class="text-xl font-bold mb-4">Super Mario Bros</h2>
+            <a href="emulator/player.html?game=https://api.allorigins.win/raw?url=https://svxmnsmuybudhneprgnf.supabase.co/storage/v1/object/public/roms/super-mario.nes&core=nes" 
+               class="btn-play block w-full py-3 rounded-xl font-bold text-white uppercase tracking-wider">
+                Jogar Agora
+            </a>
         </div>
 
-        <!-- JOGO 2: DONKEY KONG (NES) -->
-        <div class="card">
-            <img src="capas/donkey-kong-country.png" alt="Capa de Donkey Kong">
-            <p>Donkey Kong</p>
-            <!-- Proxy CORS + Core correto: nes -->
-            <a class="btn" href="emulator/player.html?game=https://api.allorigins.win/raw?url=https://svxmnsmuybudhneprgnf.supabase.co/storage/v1/object/public/roms/donkey-kong.nes&core=nes">Jogar Donkey Kong</a>
+        <!-- JOGO 2: DONKEY KONG -->
+        <div class="game-card p-6 rounded-2xl text-center">
+            <div class="w-full h-40 bg-slate-700 rounded-lg mb-4 flex items-center justify-center">
+                <span class="text-5xl">🦍</span>
+            </div>
+            <h2 class="text-xl font-bold mb-4">Donkey Kong</h2>
+            <a href="emulator/player.html?game=https://api.allorigins.win/raw?url=https://svxmnsmuybudhneprgnf.supabase.co/storage/v1/object/public/roms/donkey-kong.nes&core=nes" 
+               class="btn-play block w-full py-3 rounded-xl font-bold text-white uppercase tracking-wider">
+                Jogar Agora
+            </a>
+        </div>
+
+        <!-- Espaço para novos jogos -->
+        <div class="game-card p-6 rounded-2xl text-center border-dashed border-slate-600 bg-transparent">
+            <div class="w-full h-40 flex items-center justify-center mb-4">
+                <span class="text-5xl opacity-30">🎮</span>
+            </div>
+            <h2 class="text-xl font-bold mb-4 opacity-30">Mais Jogos em Breve</h2>
+            <div class="w-full py-3 rounded-xl bg-slate-800 text-slate-600 font-bold uppercase cursor-not-allowed">
+                Indisponível
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center mt-20 text-slate-500 text-sm">
+        <p>&copy; 2026 Retro Games - Emulação via Browser</p>
+    </footer>
+
 </body>
 </html>
