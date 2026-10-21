@@ -13,11 +13,34 @@
     <div id="game"></div>
     
     <script>
-        window.EJS_player = {
-            gameUrl: new URLSearchParams(window.location.search).get('game'),
-            core: new URLSearchParams(window.location.search).get('core') || 'nes',
-            parent: document
-        };
+        async function loadGame() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameUrl = urlParams.get('game');
+            const core = urlParams.get('core') || 'nes';
+
+            if (!gameUrl) {
+                alert("Nenhum jogo foi selecionado!");
+                return;
+            }
+
+            try {
+                // Baixa a ROM via proxy e transforma em um arquivo temporário (Blob)
+                const response = await fetch(gameUrl);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Injeta a ROM diretamente na configuração do motor
+                window.EJS_player = {
+                    gameUrl: blobUrl,
+                    core: core,
+                    parent: document
+                };
+            } catch (e) {
+                console.error("Erro crítico ao carregar ROM:", e);
+            }
+        }
+
+        loadGame();
     </script>
     <script src="emulator.min.js"></script>
 </body>
