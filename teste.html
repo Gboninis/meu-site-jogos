@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teste de desempenho</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; padding: 16px; max-width: 520px; margin: 0 auto; }
+        p { color: #bbb; line-height: 1.4; }
+        a { display: block; background: #333; color: white; text-decoration: none; padding: 14px 16px; border-radius: 10px; margin: 10px 0; }
+        a b { color: #ff5252; margin-right: 6px; }
+        a span { display: block; color: #aaa; font-size: 14px; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Teste de desempenho</h1>
+    <p>Abra cada teste, toque em Iniciar, espere uns 15 segundos e anote o FPS do canto superior direito. Volte e faça o próximo.</p>
+    <div id="lista"></div>
+    <script>
+        const rom = 'roms/Donkey%20Kong%20Country%20(U)%20(V1.2)%20%5B!%5D.smc';
+        const testes = [
+            ['1', 'Normal', 'como o site está hoje', ''],
+            ['2', 'Sem som', 'o jogo roda mudo', '&som=0'],
+            ['3', 'VSync desligado', 'o emulador usa relógio próprio', '&vsync=0'],
+            ['4', 'WebGL 2', 'outra versão do motor de vídeo', '&webgl2=1'],
+            ['5', 'Sem controle na tela', 'só para medir; não dá para jogar', '&controle=0'],
+        ];
+        const lista = document.getElementById('lista');
+        for (const [n, nome, desc, extra] of testes) {
+            const a = document.createElement('a');
+            a.href = 'emulator/player.html?game=' + rom + extra + '&t=' + Date.now();
+            a.innerHTML = '<b>' + n + '</b>' + nome + '<span>' + desc + '</span>';
+            lista.appendChild(a);
+        }
+    </script>
+</body>
+</html>

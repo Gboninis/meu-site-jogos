@@ -1,0 +1,9 @@
+# Jogos comerciais não vão para o GitHub (nem para a Vercel): coloque as ROMs só no seu aparelho
+roms/*
+!roms/.gitkeep
+
+# Certificado local do https caseiro (não serve fora deste Mac)
+certificado-mac.crt
+
+# Lixo do macOS
+.DS_Store

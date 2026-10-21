@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- No celular: ocupa a tela inteira e não deixa o toque nos botões dar zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <style>body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; touch-action: none; }
+    #game { width: 100%; height: 100%; }
+    [hidden] { display: none !important; }
+    #escolha { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+        padding: 24px; color: white; font-family: sans-serif; text-align: center; }
+    #escolha h1 { margin: 0; font-size: 22px; }
+    #escolha p { margin: 0; color: #bbb; max-width: 320px; line-height: 1.4; }
+    #escolha label { background: #ff0000; color: white; padding: 14px 24px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+    #escolha input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    #escolha a { color: #bbb; }</style>
+</head>
+<body>
+    <div id="game"></div>
+    <div id="escolha" hidden>
+        <h1 id="escolha-nome">Escolha o jogo</h1>
+        <p>Toque no botão e escolha o arquivo do jogo salvo no seu aparelho (app Arquivos). O jogo fica só no seu aparelho.</p>
+        <label for="arquivo">Escolher jogo</label>
+        <input type="file" id="arquivo">
+        <a href="../index.html">← Voltar</a>
+    </div>
+    <script>
+        // Configurações do Emulador
+        window.EJS_player = '#game';
+        window.EJS_pathtodata = './';      // esta pasta (emulator/), onde estão loader.js e cores/
+        window.EJS_language = 'pt-BR';
+        // Controle na tela sempre ligado em aparelhos com toque (celular e tablet)
+        window.EJS_defaultOptions = {
+            'virtual-gamepad': 'enabled',
+            'snes9x_audio_interpolation': 'none'   // som mais leve para o processador do celular
+        };
+
+        // Celular em economia de energia limita a tela a 30 Hz, e com VSync o jogo roda na metade da velocidade.
+        // Medimos a tela enquanto a página espera o "Iniciar" (com o jogo rodando a medida fica distorcida):
+        // se ela estiver limitada, desligamos o VSync (o jogo volta à velocidade cheia);
+        // numa tela normal de 60 Hz mantemos o VSync, que ali dá os 60 FPS completos.
+        let hzDaTela = 60;
+        const intervalos = [];
+        let ultimo = null;
+        const medir = t => {
+            if (ultimo !== null) intervalos.push(t - ultimo);
+            ultimo = t;
+            if (intervalos.length < 40) return requestAnimationFrame(medir);
+            intervalos.sort((a, b) => a - b);
+            hzDaTela = 1000 / intervalos[Math.floor(intervalos.length / 2)];  // intervalo típico (mediana)
+        };
+        requestAnimationFrame(medir);
+        window.EJS_onGameStart = () => {
+            const limitada = hzDaTela < 45 || urlParams.get('vsync') === '0';
+            // Só mexe quando precisa, direto no motor (sem gravar a opção no navegador):
+            // reenviar "VSync ligado" numa tela normal derruba o jogo de 60 para 50 FPS.
+            if (limitada) window.EJS_emulator.gameManager.setVSync(false);
+            console.log('Tela a ' + hzDaTela.toFixed(0) + ' Hz, VSync ' + (limitada ? 'desligado' : 'ligado'));
+        };
+
+        // Isso pega o link da ROM que você colocou no botão da vitrine
+        const urlParams = new URLSearchParams(window.location.search);
+        let game = urlParams.get('game') || '';
+        // O botão usa caminho a partir da raiz do site (roms/...); daqui de dentro de emulator/ é ../roms/...
+        if (game && !/^(https?:|\/|\.\.\/)/.test(game)) game = '../' + game;
+        window.EJS_gameUrl = game;
+
+        // Console escolhido pela extensão da ROM (para forçar, use &core=snes no link)
+        const porExtensao = {
+            nes: 'nes', sfc: 'snes', smc: 'snes', gba: 'gba', gb: 'gb', gbc: 'gb',
+            n64: 'n64', z64: 'n64', md: 'segaMD', gen: 'segaMD', sms: 'segaMS', gg: 'segaGG'
+        };
+        const ext = game.split('?')[0].split('.').pop().toLowerCase();
+        window.EJS_core = urlParams.get('core') || porExtensao[ext] || 'snes';
+
+        // Chaves de diagnóstico (usadas pela página teste.html): ?som=0, ?vsync=0, ?webgl2=1, ?controle=0
+        const teste = k => urlParams.get(k);
+        if (teste('webgl2') === '1') window.EJS_defaultOptions.webgl2Enabled = 'enabled';
+        if (teste('controle') === '0') window.EJS_defaultOptions['virtual-gamepad'] = 'disabled';
+        if (teste('som') === '0') { window.AudioContext = undefined; window.webkitAudioContext = undefined; }
+
+        // iPhone/iPad: o Safari deixa o som "suspenso" e o emulador fica parado esperando.
+        // Guardamos cada contexto de áudio criado e o liberamos a cada toque na tela.
+        const audios = [];
+        const AudioOriginal = window.AudioContext || window.webkitAudioContext;
+        if (AudioOriginal) {
+            const AudioRastreado = class extends AudioOriginal {
+                constructor(...args) { super(...args); audios.push(this); }
+            };
+            window.AudioContext = AudioRastreado;
+            window.webkitAudioContext = AudioRastreado;
+        }
+        const liberarSom = () => audios.forEach(a => { if (a.state !== 'running') a.resume(); });
+        ['touchstart', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, liberarSom, true));
+
+        // Carrega o motor do emulador
+        const carregarMotor = () => {
+            let script = document.createElement('script');
+            script.src = 'loader.js';
+            document.head.appendChild(script);
+        };
+
+        if (game) {
+            carregarMotor();
+        } else {
+            // Site publicado (sem ROMs no servidor): o jogo vem do próprio aparelho e nunca sai dele
+            const escolha = document.getElementById('escolha');
+            escolha.hidden = false;
+            if (urlParams.get('nome')) document.getElementById('escolha-nome').textContent = urlParams.get('nome');
+            document.getElementById('arquivo').addEventListener('change', e => {
+                const arquivo = e.target.files[0];
+                if (!arquivo) return;
+                const extArq = arquivo.name.split('.').pop().toLowerCase();
+                window.EJS_gameUrl = arquivo;
+                window.EJS_gameName = arquivo.name.replace(/\.[^.]+$/, '');
+                window.EJS_core = urlParams.get('core') || porExtensao[extArq] || 'snes';
+                escolha.remove();
+                carregarMotor();
+            });
+        }
+    </script>
+</body>
+</html>

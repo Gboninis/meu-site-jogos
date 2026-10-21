@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Diagnóstico</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; padding: 16px; max-width: 520px; margin: 0 auto; }
+        .num { font-size: 56px; font-weight: bold; margin: 4px 0 16px; }
+        .rot { color: #aaa; }
+        #bola { width: 40px; height: 40px; border-radius: 50%; background: #ff5252; position: relative; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Diagnóstico</h1>
+    <div class="rot">Atualizações da tela por segundo</div>
+    <div class="num" id="hz">…</div>
+    <div class="rot">Velocidade do processador (menor = mais rápido)</div>
+    <div class="num" id="cpu">…</div>
+    <div id="bola"></div>
+    <script>
+        // 1) Quantas vezes por segundo o navegador redesenha a página
+        const marcas = [];
+        const bola = document.getElementById('bola');
+        const quadro = t => {
+            marcas.push(t);
+            while (marcas.length && t - marcas[0] > 1000) marcas.shift();
+            document.getElementById('hz').textContent = marcas.length;
+            bola.style.left = (Math.sin(t / 300) * 120 + 120) + 'px';  // algo animando na tela
+            requestAnimationFrame(quadro);
+        };
+        requestAnimationFrame(quadro);
+
+        // 2) Tempo para fazer uma conta fixa (mesma conta em qualquer aparelho)
+        const medirCpu = () => {
+            const ini = performance.now();
+            let x = 0;
+            for (let i = 0; i < 30000000; i++) x = (x + i * 7) % 1000003;
+            const ms = performance.now() - ini;
+            document.getElementById('cpu').textContent = ms.toFixed(0) + ' ms';
+            return x;
+        };
+        setTimeout(medirCpu, 1500);
+        setInterval(medirCpu, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meus Jogos Retro</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; text-align: center; }
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
+        .card { background: #333; padding: 10px; border-radius: 10px; width: 150px; }
+        .card img { width: 100%; border-radius: 5px; }
+        .btn { background: #ff0000; color: white; padding: 10px; text-decoration: none; display: block; margin-top: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Biblioteca de Jogos</h1>
+    <div class="grid">
+        <!-- JOGO 1 -->
+        <div class="card">
+            <img src="capas/super-mario-world.png" alt="Capa de Super Mario World">
+            <p>Super Mario World</p>
+            <!-- Aqui você coloca o link para o player e a URL da ROM no final -->
+            <a class="btn" href="emulator/player.html?game=roms/super-mario.nes&core=snes">Jogar</a>
+        </div>
+
+        <!-- JOGO 2 -->
+        <div class="card">
+            <img src="capas/donkey-kong-country.png" alt="Capa de Donkey Kong Country">
+            <p>Donkey Kong Country</p>
+            <a class="btn" href="emulator/player.html?game=roms/donkey-kong.nes&core=snes">Jogar</a>
+        </div>
+    </div>
+</body>
+</html>
