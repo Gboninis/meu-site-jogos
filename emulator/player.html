@@ -9,7 +9,7 @@
         #game { width: 100vw; height: 100vh; }
     </style>
 </head>
-<body>
+<body style="background-color: black;">
     <div id="game"></div>
     
     <script>
@@ -23,12 +23,12 @@
                 return;
             }
 
-            // Configuramos o motor para carregar a URL do Supabase DIRETAMENTE
-            // Removendo o fetch e o Blob que causavam o erro de CORS
             window.EJS_player = {
                 gameUrl: gameUrl, 
                 core: core,
-                parent: document.getElementById('game')
+                parent: document.getElementById('game'),
+                // Aqui tentamos apontar para a pasta cores que você possui
+                path: 'emulator/' 
             };
         }
 
