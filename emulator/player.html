@@ -13,7 +13,7 @@
     <div id="game"></div>
     
     <script>
-        async function loadGame() {
+        function loadGame() {
             const urlParams = new URLSearchParams(window.location.search);
             const gameUrl = urlParams.get('game');
             const core = urlParams.get('core') || 'nes';
@@ -23,21 +23,13 @@
                 return;
             }
 
-            try {
-                // Baixa a ROM via proxy e transforma em um arquivo temporário (Blob)
-                const response = await fetch(gameUrl);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-
-                // Injeta a ROM diretamente na configuração do motor
-                window.EJS_player = {
-                    gameUrl: blobUrl,
-                    core: core,
-                    parent: document
-                };
-            } catch (e) {
-                console.error("Erro crítico ao carregar ROM:", e);
-            }
+            // Configuramos o motor para carregar a URL do Supabase DIRETAMENTE
+            // Removendo o fetch e o Blob que causavam o erro de CORS
+            window.EJS_player = {
+                gameUrl: gameUrl, 
+                core: core,
+                parent: document.getElementById('game')
+            };
         }
 
         loadGame();
