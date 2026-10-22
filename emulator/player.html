@@ -16,11 +16,10 @@
             core: new URLSearchParams(window.location.search).get('core'),
             path: window.location.origin + '/emulator/',
             extra: {
-                // Tentativa de forçar a execução sem SharedArrayBuffer se o navegador bloquear
-                forceSingleThread: true 
+                forceSingleThread: false 
             }
         };
     </script>
-    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+    <script src="/emulator/loader.js"></script>
 </body>
 </html>
