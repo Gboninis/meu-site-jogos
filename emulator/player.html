@@ -5,18 +5,27 @@
     <title>EmulatorJS</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
-        #game { width: 100%; height: 100%; }
+        #game { width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
     <div id="game"></div>
+
     <script>
-        // Configuração forçada para evitar o erro de [Object Object]
+        // Pegamos os dados da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const game = urlParams.get('game');
+        const core = urlParams.get('core');
+
+        // Forçamos a configuração global que o motor busca
         window.EJS_player = {
-            gameUrl: new URLSearchParams(window.location.search).get('game'),
-            coreUrl: new URLSearchParams(window.location.search).get('core')
+            gameUrl: game,
+            coreUrl: core,
+            divId: 'game' 
         };
     </script>
+
+    <!-- Carregamos o motor -->
     <script src="/emulator/loader.js"></script>
 </body>
 </html>
