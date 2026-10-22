@@ -14,14 +14,15 @@
         window.EJS_player = {
             gameUrl: new URLSearchParams(window.location.search).get('game'),
             core: new URLSearchParams(window.location.search).get('core'),
-            path: './', // Isso diz para o emulador usar a pasta onde ele já está
+            // Aqui está o segredo: usamos o loader da internet, mas mandamos ele buscar os arquivos no SEU site
+            path: window.location.origin + '/emulator/', 
             extra: {
                 onLoad: function() {
-                    console.log("Jogo carregado localmente!");
+                    console.log("Jogo carregado!");
                 }
             }
         };
     </script>
-    <script src="emulator.min.js"></script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
