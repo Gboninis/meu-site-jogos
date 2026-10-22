@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <title>EmulatorJS</title>
@@ -11,23 +11,17 @@
 <body>
     <div id="game"></div>
     <script>
-        // Configuração do EmulatorJS
-        window.EJS_player = (() => {
-            const params = new URLSearchParams(window.location.search);
-            let game = params.get('game');
-            let core = params.get('core');
-
-            // Auto-correção: Se a ROM é .nes mas o core é snes, corrige para nes
-            if (game && game.endsWith('.nes') && core === 'snes') {
-                core = 'nes';
+        window.EJS_player = {
+            gameUrl: new URLSearchParams(window.location.search).get('game'),
+            core: new URLSearchParams(window.location.search).get('core'),
+            path: 'https://cdn.emulatorjs.org/stable/',
+            extra: {
+                // Força a renderização imediata
+                onLoad: function() {
+                    console.log("Jogo carregado com sucesso!");
+                }
             }
-
-            return {
-                gameUrl: game,
-                core: core,
-                path: 'https://cdn.emulatorjs.org/stable/',
-            };
-        })();
+        };
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
