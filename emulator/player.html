@@ -14,12 +14,10 @@
         window.EJS_player = {
             gameUrl: new URLSearchParams(window.location.search).get('game'),
             core: new URLSearchParams(window.location.search).get('core'),
-            // Aqui está o segredo: usamos o loader da internet, mas mandamos ele buscar os arquivos no SEU site
-            path: window.location.origin + '/emulator/', 
+            path: window.location.origin + '/emulator/',
             extra: {
-                onLoad: function() {
-                    console.log("Jogo carregado!");
-                }
+                // Tentativa de forçar a execução sem SharedArrayBuffer se o navegador bloquear
+                forceSingleThread: true 
             }
         };
     </script>
