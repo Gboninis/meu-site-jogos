@@ -11,14 +11,14 @@
 <body>
     <div id="game"></div>
     <script>
+        // Configuração simplificada para evitar bloqueios de segurança
         window.EJS_player = {
             gameUrl: new URLSearchParams(window.location.search).get('game'),
             core: new URLSearchParams(window.location.search).get('core'),
             path: 'https://cdn.emulatorjs.org/stable/',
             extra: {
-                // Força a renderização imediata
                 onLoad: function() {
-                    console.log("Jogo carregado com sucesso!");
+                    console.log("Carregado!");
                 }
             }
         };
