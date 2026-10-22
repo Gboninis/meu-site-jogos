@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>EmulatorJS</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
+        #game { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+    <script>
+        // Configuração forçada para evitar o erro de [Object Object]
+        window.EJS_player = {
+            gameUrl: new URLSearchParams(window.location.search).get('game'),
+            coreUrl: new URLSearchParams(window.location.search).get('core')
+        };
+    </script>
+    <script src="/emulator/loader.js"></script>
+</body>
+</html>
