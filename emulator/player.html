@@ -5,19 +5,17 @@
     <title>Teste de Vida Emulator</title>
 </head>
 <body style="background:black;margin:0;">
-    <!-- CORRIGIDO: Fechei a tag div corretamente com '>' -->
     <div id="game-container" style="width:100vw;height:100vh;"></div>
 
     <script>
-        // Alerta para confirmação de carga
         alert("O HTML carregou!");
 
         window.EJS_player = {
             gameUrl: String(new URLSearchParams(window.location.search).get('game')),
             core: String(new URLSearchParams(window.location.search).get('core')),
-            // Ajuste para garantir que o caminho seja limpo e comece com /emulator/
             path: '/emulator/', 
-            container: 'game-container', 
+            // Mudança crucial aqui: forçando a string de forma absoluta
+            container: String('game-container'), 
             extra: { 
                 forceSingleThread: false,
                 debug: true 
