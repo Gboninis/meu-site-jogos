@@ -4,6 +4,9 @@
             core: String(new URLSearchParams(window.location.search).get('core')),
             path: String(window.location.origin + '/emulator/'),
             container: String('game-container'), 
-            extra: { forceSingleThread: false }
+            extra: { 
+                forceSingleThread: false,
+                debug: true // Ativando o modo de depuração para vermos os erros de carregamento
+            }
         };
     </script>
