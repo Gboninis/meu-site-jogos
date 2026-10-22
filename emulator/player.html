@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Emulator Test</title>
-</head>
-<body style="background:black;margin:0;">
-    <!-- Mudamos o ID para testar se o JS está travado num nome específico -->
-    <div id="game-container" style="width:100vw;height:100vh;"></div>
-
     <script>
-        // Forçamos a configuração do emulador a usar o novo ID
         window.EJS_player = {
-            gameUrl: new URLSearchParams(window.location.search).get('game'),
-            core: new URLSearchParams(window.location.search).get('core'),
-            path: window.location.origin + '/emulator/',
-            container: 'game-container', // Forçando o ID aqui
+            gameUrl: String(new URLSearchParams(window.location.search).get('game')),
+            core: String(new URLSearchParams(window.location.search).get('core')),
+            path: String(window.location.origin + '/emulator/'),
+            container: String('game-container'), 
             extra: { forceSingleThread: false }
         };
     </script>
-    <script src="/emulator/loader.js"></script>
-</body>
-</html>
