@@ -1,28 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>EmulatorJS</title>
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; overflow: hidden; }
-        #game-container { width: 100%; height: 100%; }
-    </style>
+    <title>Emulator</title>
+    <style>body, html, #game { margin: 0; padding: 0; width: 100%; height: 100%; background: black; }</style>
 </head>
-<body style="background-color: black;">
-
-    <!-- Mudei o ID para evitar qualquer conflito de memória do navegador -->
-    <div id="game-container"></div>
-
+<body>
+    <div id="game"></div>
     <script>
         window.EJS_player = {
             gameUrl: new URLSearchParams(window.location.search).get('game'),
             core: new URLSearchParams(window.location.search).get('core'),
             path: window.location.origin + '/emulator/',
-            // Forçamos o emulador a usar o novo ID
-            container: 'game-container', 
-            extra: {
-                forceSingleThread: false 
-            }
+            extra: { forceSingleThread: false }
         };
     </script>
     <script src="/emulator/loader.js"></script>
