@@ -10,22 +10,6 @@
 </head>
 <body>
     <div id="game"></div>
-
-    <script>
-        // Pegamos os dados da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const game = urlParams.get('game');
-        const core = urlParams.get('core');
-
-        // Forçamos a configuração global que o motor busca
-        window.EJS_player = {
-            gameUrl: game,
-            coreUrl: core,
-            divId: 'game' 
-        };
-    </script>
-
-    <!-- Carregamos o motor -->
     <script src="/emulator/loader.js"></script>
 </body>
 </html>
