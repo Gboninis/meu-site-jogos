@@ -1,7 +1,8 @@
 window.EJS_player = {
     gameUrl: new URLSearchParams(window.location.search).get('game'),
     coreUrl: new URLSearchParams(window.location.search).get('core'),
-    divId: 'game'
+    divId: 'game',
+    dataPath: '/emulator/data/' // <--- ISSO AQUI FORÇA O MOTOR A ACHAR A PASTA
 };
 
 function loadEngine() {
